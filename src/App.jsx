@@ -11,7 +11,8 @@ const MOCK_DATA = {
       "The latte was perfectly balanced and the staff made me feel right at home. Best spot for morning coffee!",
       "Incredible atmosphere for getting work done. The WiFi is fast and the croissants are flaky and fresh.",
       "A true neighborhood gem. I love the minimalist decor and the espresso is consistently high quality.",
-      "Fast service even during the morning rush. Highly recommend their seasonal blends!"
+      "Fast service even during the morning rush. Highly recommend their seasonal blends!",
+      "Lovely place with great music. The staff is attentive and the coffee quality is unmatched."
     ]
   }
 };
@@ -37,95 +38,93 @@ export default function App() {
     }, 1000);
   };
 
-  if (!place) return <div className="h-screen flex items-center justify-center bg-zinc-50">Loading...</div>;
+  if (!place) return <div className="h-screen flex items-center justify-center bg-zinc-50 font-sans italic text-zinc-400">Loading experience...</div>;
 
   return (
-    <div className="min-h-screen bg-zinc-50 font-sans text-zinc-900">
+    <div className="min-h-screen bg-zinc-50 font-sans text-zinc-900 flex flex-col">
       
-      {/* Header */}
-      <nav className="w-full bg-white border-b border-zinc-200 py-4 px-6 md:px-12 flex justify-between items-center sticky top-0 z-50">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-zinc-900 rounded-lg flex items-center justify-center text-white text-xl">
+      {/* 1. Header & Hero (Top) */}
+      <header className="w-full pt-12 pb-8 px-6 text-center bg-zinc-50">
+        <div className="flex justify-center mb-6">
+          <div className="w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center text-white text-2xl shadow-xl">
             {place.logo}
           </div>
-          <div>
-            <h2 className="font-bold text-lg leading-none">{place.name}</h2>
-            <p className="text-xs text-zinc-500 mt-1">{place.location}</p>
+        </div>
+        <h1 className="text-4xl md:text-5xl font-black tracking-tighter mb-2">
+          Help us to grow.
+        </h1>
+        <p className="text-zinc-400 text-lg font-medium mb-2">Your review has value to us.</p>
+        <p className="text-zinc-500 text-sm italic">Pick a review you like and share on Google.</p>
+      </header>
+
+      {/* 2. Review Selection (Center) */}
+      <main className="flex-1 max-w-2xl mx-auto w-full px-6 pb-40">
+        <div className="flex items-center justify-between mb-6 px-2">
+          <div className="flex items-center gap-2">
+            {/* <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" /> */}
+            <h4 className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Select an option</h4>
           </div>
-        </div>
-      </nav>
-
-      <main className="max-w-6xl mx-auto px-6 py-12 md:py-20">
-        
-        {/* Simplified Hero Section */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-7xl font-black tracking-tighter mb-4 leading-[1.1]">
-            Help us to grow. <br />
-            <span className="text-zinc-400">Your review has value to us.</span>
-          </h1>
+          <button className="text-zinc-400 hover:text-zinc-900 transition-colors">
+            <RefreshCcw size={18} />
+          </button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          
-          {/* Left Side: Dynamic Instruction/Action Card */}
-          <div className="lg:col-span-4 lg:sticky lg:top-28 h-fit">
-            <div className="bg-white p-8 rounded-3xl border border-zinc-200 shadow-sm text-center">
-              <div className="mb-6 flex justify-center">
-                 <div className={`w-16 h-16 rounded-full flex items-center justify-center transition-colors ${selectedReview ? 'bg-green-100 text-green-600' : 'bg-zinc-100 text-zinc-400'}`}>
-                    {selectedReview ? <Check size={32} /> : <Star size={32} />}
-                 </div>
-              </div>
-              
-              <h3 className="font-bold text-xl mb-2">
-                {selectedReview ? "Ready to post!" : "Pick a review"}
-              </h3>
-              <p className="text-sm text-zinc-500 mb-8">
-                {selectedReview 
-                  ? "We've copied your selection. Click below to paste it on our Google profile." 
-                  : "Tap on one of the AI-generated suggestions on the right to get started."}
+        <div className="space-y-4">
+          {place.reviews.map((rev, i) => (
+            <div
+              key={i}
+              onClick={() => setSelectedReview(rev)}
+              className={`p-6 rounded-[1.5rem] border-2 transition-all duration-300 cursor-pointer bg-white
+                ${selectedReview === rev 
+                  ? 'border-zinc-900 shadow-xl scale-[1.01]' 
+                  : 'border-zinc-100 hover:border-zinc-200'
+                }`}
+            >
+              <p className={`leading-relaxed ${selectedReview === rev ? 'text-zinc-900 font-medium' : 'text-zinc-600'}`}>
+                "{rev}"
               </p>
-
-              <button
-                disabled={!selectedReview}
-                onClick={handleAction}
-                className={`w-full py-5 rounded-2xl font-bold text-lg shadow-xl flex items-center justify-center gap-3 transition-all transform
-                  ${selectedReview 
-                    ? 'bg-zinc-900 text-white hover:scale-[1.02] active:scale-95' 
-                    : 'bg-zinc-200 text-zinc-400 cursor-not-allowed'
-                  }`}
-              >
-                {isCopied ? "Opening Google..." : "Copy & Post Review"}
-                {selectedReview && !isCopied && <ExternalLink size={18} />}
-              </button>
-            </div>
-          </div>
-
-          {/* Right Side: Review Cards */}
-          <div className="lg:col-span-8 space-y-4">
-            <div className="flex items-center justify-between px-2 mb-4">
-              <h4 className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Select your experience</h4>
-              <button className="text-zinc-400 hover:text-black transition-colors"><RefreshCcw size={16} /></button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {place.reviews.map((rev, i) => (
-                <div
-                  key={i}
-                  onClick={() => setSelectedReview(rev)}
-                  className={`p-6 rounded-3xl border-2 transition-all cursor-pointer bg-white
-                    ${selectedReview === rev 
-                      ? 'border-zinc-900 ring-4 ring-zinc-900/5 shadow-md' 
-                      : 'border-zinc-100 hover:border-zinc-300'
-                    }`}
-                >
-                  <p className="text-zinc-700 leading-relaxed text-sm">{rev}</p>
+              {selectedReview === rev && (
+                <div className="mt-3 flex justify-end">
+                  <span className="text-[10px] font-black text-zinc-900 uppercase tracking-widest flex items-center gap-1">
+                    <Check size={12} /> Selected
+                  </span>
                 </div>
-              ))}
+              )}
             </div>
-          </div>
-
+          ))}
         </div>
       </main>
+
+      {/* 3. Dynamic Action Button (Bottom) */}
+      <div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-zinc-50 via-zinc-50 to-transparent pt-10">
+        <div className="max-w-2xl mx-auto">
+          <button
+            disabled={!selectedReview}
+            onClick={handleAction}
+            className={`w-full py-5 rounded-2xl font-bold text-lg shadow-2xl flex items-center justify-center gap-3 transition-all active:scale-95
+              ${selectedReview 
+                ? 'bg-zinc-900 text-white hover:bg-black' 
+                : 'bg-zinc-200 text-zinc-400 cursor-not-allowed'
+              }`}
+          >
+            {/* Logic for Dynamic Button Text */}
+            {!selectedReview ? (
+              "Select your review"
+            ) : isCopied ? (
+              "Opening Google Maps..."
+            ) : (
+              <>
+                <span>Post your review</span>
+                <ExternalLink size={20} />
+              </>
+            )}
+          </button>
+          
+          <p className="text-center text-[10px] text-zinc-400 font-bold uppercase tracking-[0.2em] mt-4">
+            {place.name} • {place.location}
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
