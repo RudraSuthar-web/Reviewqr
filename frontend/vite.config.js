@@ -8,8 +8,6 @@ export default defineConfig({
     tailwindcss(),
   ],
   server: {
-    allowedHosts: [
-      'rachell-painted-badgeringly.ngrok-free.dev' // Add your specific host here
-    ]
+    allowedHosts: true
   }
 })
